@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>L1-C: virtualized list</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 700px; margin: 32px auto; padding: 0 16px; }
+      #viewport { height: 320px; overflow-y: scroll; border: 1px solid #ccc; border-radius: 6px; }
+      #spacer { position: relative; }
+      .row { position: absolute; left: 0; right: 0; height: 40px; padding: 8px 12px;
+             box-sizing: border-box; border-bottom: 1px solid #eee; display: flex;
+             align-items: center; justify-content: space-between; background: white; }
+      .row button { padding: 4px 10px; font-size: 13px; cursor: pointer; }
+      .status { margin-top: 16px; padding: 10px; border: 1px dashed #aaa; border-radius: 6px; color: #444; }
+    </style>
+  </head>
+  <body>
+    <h1>Inventory</h1>
+    <p>Scroll through the inventory. Only a handful of rows are mounted at any time — this simulates a real virtualized list (react-window, TanStack Virtual, etc.).</p>
+
+    <div id="viewport">
+      <div id="spacer"></div>
+    </div>
+
+    <div class="status" id="status">Status: waiting</div>
+
+    <script>
+      window.__test_passed = false;
+
+      const TOTAL = 100;
+      const ROW_H = 40;
+      const SECRET_INDEX = 61; // 1-based label "Item 62" below the fold.
+      const viewport = document.getElementById('viewport');
+      const spacer   = document.getElementById('spacer');
+      const status   = document.getElementById('status');
+
+      spacer.style.height = (TOTAL * ROW_H) + 'px';
+
+      function labelFor(i) {
+        // One row has a unique, memorable label so the agent can ground its goal.
+        if (i === SECRET_INDEX) return 'Gold widget';
+        return 'Item ' + (i + 1);
+      }
+
+      function render() {
+        const scrollTop = viewport.scrollTop;
+        const h = viewport.clientHeight;
+        const first = Math.max(0, Math.floor(scrollTop / ROW_H) - 2);
+        const last  = Math.min(TOTAL - 1, Math.ceil((scrollTop + h) / ROW_H) + 2);
+
+        // Remove stale rows (anything outside the window).
+        spacer.querySelectorAll('.row').forEach((row) => {
+          const idx = Number(row.dataset.idx);
+          if (idx < first || idx > last) row.remove();
+        });
+
+        // Mount any missing rows in the window.
+        for (let i = first; i <= last; i++) {
+          if (spacer.querySelector('.row[data-idx="' + i + '"]')) continue;
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.dataset.idx = String(i);
+          row.style.top = (i * ROW_H) + 'px';
+
+          const label = document.createElement('span');
+          label.textContent = labelFor(i);
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = 'Claim';
+          btn.addEventListener('click', () => {
+            status.textContent = 'Status: claimed ' + labelFor(i);
+            // Pass only when the Gold widget row is claimed.
+            if (i === SECRET_INDEX) window.__test_passed = true;
+          });
+
+          row.appendChild(label);
+          row.appendChild(btn);
+          spacer.appendChild(row);
+        }
+      }
+
+      viewport.addEventListener('scroll', render);
+      render();
+    </script>
+  </body>
+</html>

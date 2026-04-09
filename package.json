@@ -1,0 +1,31 @@
+{
+  "name": "ai-browser-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "smoke": "tsx src/smoke.ts",
+    "task": "tsx src/run-task.ts",
+    "safety": "tsx src/safety-test.ts",
+    "l1": "tsx tests/l1.ts",
+    "observe-smoke": "tsx tests/observe-smoke.ts",
+    "grounded-smoke": "tsx tests/grounded-smoke.ts",
+    "delta-smoke": "tsx tests/delta-smoke.ts",
+    "login": "tsx src/login-helper.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "dotenv": "^17.4.1",
+    "openai": "^6.33.0",
+    "playwright": "^1.59.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
+  }
+}

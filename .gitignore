@@ -1,0 +1,17 @@
+node_modules/
+.env
+runs/
+*.log
+.DS_Store
+dist/
+.playwright-mcp/
+user-data/
+.claude/
+.state/
+snapshot-*.md
+variants/
+CLAUDE.md
+PLAN.md
+docs/HANDOFF-*.md
+docs/PLAN_v1_failed.md
+docs/PLAN-4-VARIANTS.md

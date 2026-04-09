@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>L1-A: simple button</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 600px; margin: 48px auto; padding: 0 16px; }
+      button { padding: 10px 18px; font-size: 16px; cursor: pointer; }
+      .status { margin-top: 24px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
+      .done { background: #d7f5d8; border-color: #4caf50; }
+    </style>
+  </head>
+  <body>
+    <h1>Task inbox</h1>
+    <p>You have one outstanding task. Please complete it.</p>
+
+    <!-- Easy case: native button with clear accessible name. The
+         label intentionally avoids destructive verbs (submit / send /
+         delete / confirm / pay / etc) so this scenario tests the
+         cascade in isolation, without dragging the safety regex into
+         L1. The safety regex is exercised separately by `npm run
+         safety` on a dedicated page. -->
+    <button id="submit-btn" type="button">Mark complete</button>
+
+    <div id="status" class="status">Status: pending</div>
+
+    <script>
+      window.__test_passed = false;
+      const btn = document.getElementById('submit-btn');
+      const status = document.getElementById('status');
+      btn.addEventListener('click', () => {
+        window.__test_passed = true;
+        status.textContent = 'Status: done';
+        status.classList.add('done');
+      });
+    </script>
+  </body>
+</html>
